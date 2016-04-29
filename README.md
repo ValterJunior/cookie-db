@@ -58,16 +58,40 @@ Method to close the table saving any peding data.
 table.close();
 ```
 
-#### start()
+#### commit()
 
-Method to load the table from the browser's cookies.
-
-> **Obs:** This method is already used in the **open()** method
+Method to persist all table changes into the **Database**
 
 ##### Examples
 
 ```javascript
-table.start();
+table.edit().getRow().active = false;
+table.post().commit();
+```
+
+#### rollback()
+
+Method to returns the table to the previous state (after the last **commit()**)
+
+##### Examples
+
+```javascript
+table.edit().getRow().active = false;
+table.post();
+table.rollback();
+```
+
+#### truncate()
+
+Method to clean up a table removing all the saved rows
+
+> **CAUTION!** Be careful, the action of this method can not be reverted.
+
+##### Examples
+
+```javascript
+// Cleaning the whole table
+table.truncate();
 ```
 
 ### Data handling methods
@@ -130,6 +154,140 @@ table.append();
 table.getRow().name   = 'Mary';
 table.getRow().active = true;
 table.post();
+```
+
+#### cancel()
+
+Method to cancel any change made in the current row under a **append** or **edit** situation.
+
+##### Examples
+
+```javascript
+// Editing the current row
+table.edit();
+table.getRow().name = 'Mary Ohana';
+
+if( table.getRow().active ){
+   table.post();
+}else{
+   table.cancel();
+}
+```
+
+### Browse methods
+
+#### goTo(recNo)
+
+Method to set a new row as the current row by using the index
+
+##### Examples
+
+```javascript
+// Editing the row number 3
+table.goTo(3);
+table.getRow().name = 'Mary Jane';
+table.post();
+// Another option
+table.goTo(3).getRow().name = 'Mary Jane';
+table.post();
+```
+
+#### locate(fields, values, isCaseSensitive)
+
+Method to locate and set a row searching by specific field values
+
+##### Examples
+
+```javascript
+if( table.locate(['name','active'], ['Mary',true]) ){
+   table.edit();
+   table.getRow().active = false;
+   table.post();
+}
+```
+
+#### first()
+
+Method to move the current cursor to the table's first row
+
+##### Examples
+
+```javascript
+table.first();
+```
+
+#### last()
+
+Method to move the current cursor to the table's last row
+
+##### Examples
+
+```javascript
+table.last();
+```
+
+#### prior()
+
+Method to move the current cursor one step back (to the prior row)
+
+##### Examples
+
+```javascript
+table.prior();
+```
+
+#### next()
+
+Method to move the current cursor one step forward (to the next row)
+
+##### Examples
+
+```javascript
+table.next();
+```
+
+### Others methods
+
+#### count()
+
+Method that returns the total of rows in a table
+
+##### Examples
+
+```javascript
+var length = table.count();
+
+if( length > 10 ){
+   alert('The table has reached its limit!');
+}
+```
+
+#### isBOF()
+
+Method to indicate if the cursor is in the initial row of the given table
+
+##### Examples
+
+```javascript
+if( table.isBOF() ){
+   alert( 'You're looking into the first row' );
+}
+```
+
+#### isEOF()
+
+Method to indicate if the cursor is in the final row of the given table
+
+##### Examples
+
+```javascript
+var names = [];
+
+table.first();
+while( !table.isEOF() ){
+   names.push( table.getRow().name );
+   table.next();
+}
 ```
 
 ## License (MIT)
