@@ -15,11 +15,11 @@ Just get the `cookie-db.min.js` file and attach to your own project.
 
 ## API Reference
 
-```
+```javascript
 // Creating a new CookieTable object
 var table = new CookieTable( 'tableName' );
 ```
-### Methods
+### Table configuration methods
 
 #### addField(name,type)
 
@@ -27,13 +27,110 @@ Method to add fields in a table
 
 ##### Examples
 
-```
-// Adding a new field
+```javascript
+// Adding new fields
 table.addField( 'id', ctFieldTypes.NUMBER );
 table.addField( 'name', ctFieldTypes.STRING );
 table.addField( 'active', ctFieldTypes.BOOL );
 ```
 
+#### open()
+
+Method to open the table whether is it created or not.
+
+##### Examples
+
+```javascript
+// Opening the table
+table.open();
+```
+
+#### close()
+
+Method to close the table saving any peding data.
+
+> **Obs:** This method is going to set the table as **inactive**
+
+##### Examples
+
+```javascript
+// Opening the table
+table.close();
+```
+
+#### start()
+
+Method to load the table from the browser's cookies.
+
+> **Obs:** This method is already used in the **open()** method
+
+##### Examples
+
+```javascript
+table.start();
+```
+
+### Data handling methods
+
+#### append()
+
+Method to create a new row
+
+##### Examples
+
+```javascript
+// Creating new row
+table.append();
+```
+
+#### edit()
+
+Method to edit a row set in the current cursor
+
+##### Examples
+
+```javascript
+// Editing the current row
+table.edit();
+```
+
+#### delete()
+
+Method to delete a row set in the current cursor
+
+##### Examples
+
+```javascript
+// Removing the current row
+table.delete();
+```
+
+#### getRow()
+
+Method to return the current row's object
+
+##### Examples
+
+```javascript
+// Reading the current row and retreiving the field "name"'s value
+var name = table.getRow().name;
+```
+
+#### post()
+
+Method to apply all changes to the table under the automatic transaction block opened.
+
+> All changes will just be physically saved after a **commit** method be called 
+
+##### Examples
+
+```javascript
+// Creating a new row to add Mary's informations
+table.append();
+table.getRow().name   = 'Mary';
+table.getRow().active = true;
+table.post();
+```
 
 ## License (MIT)
 
